@@ -1,0 +1,50 @@
+{
+    "Name":{
+        "0":"Clean Code",
+        "1":"The Legend of Zelda",
+        "2":"Don't Make Me Think, Revisited",
+        "3":"Godel, Escher, Bach",
+        "4":"Superintelligence",
+        "5":"Web Design with HTML, CSS, JavaScript and jQuery Set",
+        "6":"Cracking the Coding Interview",
+        "7":"The Internet is a Playground",
+        "8":"DanTDM: Trayaurus and the Enchanted Crystal",
+        "9":"Life 3.0"
+    },
+    "Author":{
+        "0":"Robert C. Martin",
+        "1":"Shigeru Miyamoto",
+        "2":"Steve Krug",
+        "3":"Douglas R. Hofstadter",
+        "4":"Nick Bostrom",
+        "5":"Jon Duckett",
+        "6":"Gayle Laakmann McDowell",
+        "7":"David Thorne",
+        "8":"DanTDM",
+        "9":"Max Tegmark"
+    },
+    "Stars":{
+        "0":"4.5",
+        "1":"4.5",
+        "2":"4",
+        "3":"4.5",
+        "4":"4",
+        "5":"4.5",
+        "6":"4.5",
+        "7":"4",
+        "8":"4.5",
+        "9":"4"
+    },
+    "Price":{
+        "0":"26.56",
+        "1":"27.56",
+        "2":"23.03",
+        "3":"16.37",
+        "4":"9.93",
+        "5":"29.93",
+        "6":"33.99",
+        "7":"15.09",
+        "8":"14.93",
+        "9":"10"
+    }
+}
