@@ -8,11 +8,11 @@ USE EmployeeDataDB;
 
 
 /*
-STEP 2 — First Understand Your CSV
+STEP 2 — First Understand CSV Data
 
 CSV has these 11 columns:
 
-Column	        Example	        Expected SQL type
+Column	        Example	        Expected SQL type (because of CSV file)
 EMPLOYEE_ID	    100	            INT
 FIRST_NAME	    Steven	        VARCHAR
 LAST_NAME	    King	        VARCHAR
@@ -57,13 +57,13 @@ CREATE TABLE Employees_Raw
 Why VARCHAR for everything initially?
 Because this is the raw CSV layer.
 
-For example:
+For example, can be:
     6/17/2003
     24000
     NaN
     100.0
 
-We don't want SQL Server to reject the entire import because one value isn't in the expected format.
+We don't want SQL Server to reject the entire import.
 We'll clean and convert these later.
 */
 
@@ -88,7 +88,7 @@ BULK INSERT Employees_Raw
 FROM 'C:\Users\WINDOWS10\Desktop\Adv Data Analysis Projects - Sept 2026\3. SQL Data Cleaning\Employees.csv'
 WITH (
     FORMAT = 'CSV',
-    FIRSTROW = 2,                  -- 2 skips the header row; use 1 if there is no header
+    FIRSTROW = 2,                  -- 2, skips the header row; use 1 if there is no header
     FIELDTERMINATOR = ',',         -- The delimiter separating columns
     ROWTERMINATOR = '\n',          -- The character separating rows (usually a newline)
     TABLOCK                        -- Optional: Locks the table during import for better performance
@@ -144,7 +144,7 @@ HAVING COUNT(*) > 1;
 
 
 
--- STEP 9 — See the Complete Duplicate Records
+-- STEP 9 — See the Complete Duplicate Records for specific "employee id"
 SELECT *
 FROM Employees_Raw
 WHERE EMPLOYEE_ID = '203';
@@ -167,7 +167,7 @@ WITH DuplicateCTE AS (
 SELECT *
 FROM DuplicateCTE
 WHERE rn > 1;
-
+-- here filtering only when "rn > 1".
 
 
 
@@ -221,18 +221,50 @@ FROM Employees_Raw;
 
 
 
+/*
+-- STEP 13 — Rules for handling missing values
+    - According to handling NULL values, if column have 70-75 % NULL then we drop the column.
+    - For categorical data column, we use Mode value (highest no of frequent occurance) of 
+        that column to fill null values. 
+    - For continuous data column, we use either Mean or Mode value of that column.
+        - So to fill by either Mean or Mode value we calculate Skewness value of that column.
+        - If the skewness value range between 0 to 0.5 then we use Mean value. 
+        - If not then we use Median value.
+    - here in SQL Server, there is no built-in Skewness function like avg(), min(), etc.
+    - So, we get skewness value using Python analysis.
 
--- STEP 13 — Calculate Missing Percentage
--- according to handling NULL values, if column have 70-75 % NULL then we drop the column.
-
--- For COMMISSION_PCT: 72 missing out of 107 total
--- Percentage: 72 / 107 * 100 = 67.29%
--- So it is highly incomplete, but it is slightly below your stated 70–75% threshold.
--- So for demo we fill the NULL values.
+Missing Values Columns: COMMISSION_PCT, MANAGER_ID & DEPARTMENT_ID
+where,
+    - COMMISSION_PCT is continuous data column
+    - MANAGER_ID & DEPARTMENT_ID is categorical data column
 
 
 
--- STEP 14 — Calculate Mean of COMMISSION_PCT
+-- STEP 14 — Calculate Missing Percentage
+For COMMISSION_PCT: 72 missing out of 107 total
+Percentage: 72 / 107 * 100 = 67.29%
+So it is highly incomplete, but it is slightly below the stated 70–75% threshold.
+So for demo we fill the NULL values.
+
+
+
+-- Check Skewness
+SQL Server have no built-in to vcalculate Skewness values like avg(), min(), max(), etc.
+So we calculate it using Python (Pandas).
+
+df['COMMISSION_PCT'].skew()
+Pandas result -> 0.09661736135041571
+Rule: 
+    0 to 0.5 → Mean
+    less than 0 or greater than 0.5 → Median
+
+here result lies between 0 - 0.5 which suggest to keep Mean value.
+
+*/
+
+
+
+-- STEP 15 — Calculate Mean of COMMISSION_PCT
 /*
 Python
 df['COMMISSION_PCT'].mean() => 0.22
@@ -243,24 +275,6 @@ SELECT
 FROM Employees_Raw
 WHERE COMMISSION_PCT IS NOT NULL
   AND COMMISSION_PCT <> '';
-
-
-
-
--- STEP 15 — Check Skewness
-/* Pandas result -> 0.09661736135041571
-Rule: 
-0 to 0.5 → Mean
-less than 0 or greater than 0.5 → Median
-
-here result lies between 0 - 0.5 which suggest to keep Mean value.
-*/
-
-
-
--- *******************************************************
-
-
 
 
 
@@ -354,22 +368,30 @@ SQL Server:
     RTRIM()
     TRIM()
 */
+-- checking the column that have whitespace or not. Later we update in another clean data table.
 SELECT
-    TRIM(FIRST_NAME) AS FIRST_NAME,
-    TRIM(LAST_NAME) AS LAST_NAME,
-    TRIM(EMAIL) AS EMAIL,
-    TRIM(JOB_ID) AS JOB_ID
-FROM Employees_Raw;
+    FIRST_NAME AS OriginalFirstName,
+    TRIM(FIRST_NAME) AS CleanedFirstName,
 
--- Permanent clean the whitespace
-SELECT
-    TRIM(FIRST_NAME) AS FIRST_NAME,
-    TRIM(LAST_NAME) AS LAST_NAME,
-    TRIM(EMAIL) AS EMAIL,
-    TRIM(JOB_ID) AS JOB_ID
-FROM Employees_Raw;
+    LAST_NAME AS OriginalLastName,
+    TRIM(LAST_NAME) AS CleanedLastName,
 
+    EMAIL AS OriginalEmail,
+    TRIM(EMAIL) AS CleanedEmail,
 
+    JOB_ID AS OriginalJobId,
+    TRIM(JOB_ID) AS CleanedJobId,
+FROM Employees_Raw
+WHERE FIRST_NAME <> TRIM(FIRST_NAME)
+    OR LAST_NAME <> TRIM(LAST_NAME)
+    OR EMAIL <> TRIM(EMAIL)
+    OR JOB_ID <> TRIM(JOB_ID);
+
+-- update result
+-- sample to update data
+-- UPDATE Employees_Raw
+-- SET FIRST_NAME = TRIM(FIRST_NAME)
+-- WHERE FIRST_NAME <> TRIM(FIRST_NAME);
 
 
 -- STEP 23 — Check for Spaces
@@ -408,25 +430,25 @@ SELECT * FROM Employees_Raw;
 
 
 
--- STEP 25 — Convert Data Types
+-- STEP 25 — New Table have specific data type
 /*
 Raw data currently has everything as text.
 Now create the properly typed table.
 */
 CREATE TABLE Employees_Clean
-    (
-        EMPLOYEE_ID       INT,
-        FIRST_NAME        VARCHAR(100),
-        LAST_NAME         VARCHAR(100),
-        EMAIL             VARCHAR(100),
-        PHONE_NUMBER      VARCHAR(50),
-        HIRE_DATE         DATE,
-        JOB_ID            VARCHAR(50),
-        SALARY            DECIMAL(12,2),
-        COMMISSION_PCT    DECIMAL(5,2),
-        MANAGER_ID        INT,
-        DEPARTMENT_ID     INT
-    );
+(
+    EMPLOYEE_ID       INT,
+    FIRST_NAME        VARCHAR(100),
+    LAST_NAME         VARCHAR(100),
+    EMAIL             VARCHAR(100),
+    PHONE_NUMBER      VARCHAR(50),
+    HIRE_DATE         DATE,
+    JOB_ID            VARCHAR(50),
+    SALARY            DECIMAL(12,2),
+    COMMISSION_PCT    DECIMAL(5,2),
+    MANAGER_ID        INT,
+    DEPARTMENT_ID     INT
+);
 
 
 
