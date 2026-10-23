@@ -9,12 +9,16 @@ A Python-based banking application developed using **Object-Oriented Programming
 
 **Technologies:** Python, OOP, Random Module
 
+Project is in folder **"1. Python"**.
+
 ---
 
 ### 2. Web Scraping Using Selenium
 A Python web scraping project using **Selenium** to automate browser interaction and extract information from websites. The project demonstrates browser automation, element identification, data extraction, and handling of dynamically loaded web content.
 
 **Technologies:** Python, Selenium, Web Scraping
+
+Project is in folder **"1. Python"**.
 
 ---
 
@@ -23,12 +27,16 @@ A data cleaning project focused on identifying and handling common data-quality 
 
 **Technologies:** Python, Pandas, Data Cleaning
 
+Project is in folder **"2. Python Analysis"**.
+
 ---
 
 ### 4. Pizza Sales Analysis
 An end-to-end sales analysis project using a pizza sales dataset to identify **revenue, orders, pizzas sold, Average Order Value (AOV), sales trends, category performance, size distribution, and top/bottom-selling pizzas**. Visualizations were created to support business decision-making related to sales, inventory, staffing, and menu strategy.
 
 **Technologies:** Python, Pandas, Matplotlib, Seaborn, Data Analysis, Data Visualization
+
+Project is in folder **"2. Python Analysis"**.
 
 ---
 
@@ -37,12 +45,16 @@ A financial data analysis project focused on evaluating a bank's loan portfolio.
 
 **Technologies:** Python, Pandas, Matplotlib, Seaborn, Data Analysis
 
+Project is in folder **"2. Python Analysis"**.
+
 ---
 
 ### 6. Power BI – Pizza Sales & Financial Loan Analysis
 Interactive Power BI dashboards developed for **Pizza Sales Analysis** and **Financial Loan Analysis**. The dashboards present KPIs, trends, category and regional analysis, loan performance, customer/borrower characteristics, and detailed business insights to support data-driven decision-making.
 
 **Technologies:** Power BI, Data Visualization, Dashboard Development, DAX
+
+Project is in folder **"4. Power BI"**.
 
 ---
 
@@ -51,6 +63,8 @@ A SQL Server data-cleaning project focused on preparing employee data for analys
 
 **Technologies:** SQL Server, T-SQL, Data Cleaning
 
+Project is in folder **"3.SQL Data Cleaning"**.
+
 ---
 
 ### 8. Database Administration & Disaster Recovery
@@ -58,12 +72,16 @@ A collection of DBA-focused documentation and practical work covering **database
 
 **Technologies:** Database Administration, Disaster Recovery, Data Center Concepts
 
+Project is in folder **"5. DBA Doc & ETL Project"**.
+
 ---
 
 ### 9. ETL & Hospitalization Data Analysis
 An ETL and data-analysis project based on a **hospitalization dataset**. The project demonstrates the process of extracting, transforming, cleaning, and preparing healthcare-related data for analysis and reporting, followed by business-oriented SQL analysis and insights. Visuals are generated using PowerBI.
 
 **Technologies:** ETL, SQL Server, Data Cleaning, Data Analysis, SQL, PowerBI
+
+Project is in folder **"5. DBA Doc & ETL Project"**.
 
 ---
 
