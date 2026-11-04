@@ -1,3 +1,8 @@
+/*
+NOTE:
+    - The documentation of this project is outside of this file named as "sql-data-cleaning.pdf".
+*/
+
 
 -- STEP 1 — Create a Database
 -- Open SQL Server Management Studio (SSMS).
